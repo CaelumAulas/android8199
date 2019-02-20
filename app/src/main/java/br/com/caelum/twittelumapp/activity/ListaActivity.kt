@@ -4,7 +4,9 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import br.com.caelum.twittelumapp.R
 import br.com.caelum.twittelumapp.modelo.Tweet
@@ -30,21 +32,28 @@ class ListaActivity : AppCompatActivity() {
         val adapter = ArrayAdapter<Tweet>(this, android.R.layout.simple_list_item_1)
         lista_tweets.adapter = adapter
 
-
         viewModel.busca().observe(this, Observer {
             adapter.clear()
             adapter.addAll(it)
         })
+
+
+        val listenerDeCliqueNoItem = AdapterView.OnItemClickListener { parent, view, position, idView ->
+            val tweet = adapter.getItem(position)
+            perguntaEDeletaTweet(tweet)
+        }
+
+        lista_tweets.onItemClickListener = listenerDeCliqueNoItem
     }
 
-    //    override fun onResume() {
-//        super.onResume()
-//        populaLista()
-//    }
+    private fun perguntaEDeletaTweet(tweet: Tweet) {
+        val dialogBuilder = AlertDialog.Builder(this)
+        dialogBuilder.setMessage("Quer mesmo deletar o tweet?")
+        dialogBuilder.setPositiveButton("Sim") { dialog, which ->
+            viewModel.deleta(tweet)
+        }
+        dialogBuilder.setNegativeButton("Não", null)
+        dialogBuilder.show()
+    }
 
-//    private fun populaLista() {
-//       val tweets = viewModel.busca()
-
-//        lista_tweets.adapter = ArrayAdapter<Tweet>(this, android.R.layout.simple_list_item_1, tweets)
-//    }
 }

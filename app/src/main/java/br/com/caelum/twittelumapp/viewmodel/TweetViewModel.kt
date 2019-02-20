@@ -8,4 +8,6 @@ class TweetViewModel(val tweetRepository: TweetRepository) : ViewModel() {
     fun adiciona(tweet: Tweet) = tweetRepository.insere(tweet)
 
     fun busca() = tweetRepository.busca()
+
+    fun deleta(tweet: Tweet) = tweetRepository.deleta(tweet)
 }

@@ -7,4 +7,6 @@ class TweetRepository(val tweetDao: TweetDao) {
     fun insere(tweet: Tweet) = tweetDao.salva(tweet)
 
     fun busca() = tweetDao.lista()
+
+    fun deleta(tweet: Tweet) = tweetDao.deleta(tweet)
 }
