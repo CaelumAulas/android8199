@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import br.com.caelum.twittelumapp.R
+import br.com.caelum.twittelumapp.adapter.TweetAdapter
 import br.com.caelum.twittelumapp.modelo.Tweet
 import br.com.caelum.twittelumapp.viewmodel.TweetViewModel
 import br.com.caelum.twittelumapp.viewmodel.TweetViewModelFactory
@@ -29,17 +30,20 @@ class ListaActivity : AppCompatActivity() {
             val intent = Intent(this,TweetActivity::class.java)
             startActivity(intent)
         }
-        val adapter = ArrayAdapter<Tweet>(this, android.R.layout.simple_list_item_1)
-        lista_tweets.adapter = adapter
 
-        viewModel.busca().observe(this, Observer {
-            adapter.clear()
-            adapter.addAll(it)
+
+        viewModel.busca().observe(this, Observer {tweets ->
+            tweets?.let {
+                if (tweets.isNotEmpty()) {
+                    val adapter = TweetAdapter(tweets)
+                    lista_tweets.adapter = adapter
+                }
+            }
         })
 
 
         val listenerDeCliqueNoItem = AdapterView.OnItemClickListener { parent, view, position, idView ->
-            val tweet = adapter.getItem(position)
+            val tweet = lista_tweets.adapter.getItem(position) as Tweet
             perguntaEDeletaTweet(tweet)
         }
 
